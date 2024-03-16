@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +41,9 @@ public class AgendaController extends HttpServlet {
 	protected void listarContatos(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ArrayList<AgendaBean> listaContatos = agendaDAO.listarContatos();
+		request.setAttribute("contatos", listaContatos);  
+		RequestDispatcher dispatcher = request.getRequestDispatcher("agenda.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	// Cria novo contato
