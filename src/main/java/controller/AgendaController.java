@@ -26,9 +26,9 @@ public class AgendaController extends HttpServlet {
 		String servletPath = request.getServletPath();
 
 		if (servletPath.equals("/main")) {
-			contatos(request, response);
+			listaContatos(request, response);
 		} else if (servletPath.equals("/insert")) {
-			novoContato(request, response);
+			criaContato(request, response);
 		} else {
 			response.sendRedirect("index.html");
 		}
@@ -36,20 +36,22 @@ public class AgendaController extends HttpServlet {
 	}
 
 	// listar contatos
-	protected void contatos(HttpServletRequest request, HttpServletResponse response)
+	protected void listaContatos(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.sendRedirect("agenda.jsp");
 	}
 
 	// Cria novo contato
-	protected void novoContato(HttpServletRequest request, HttpServletResponse response)
+	protected void criaContato(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
 		contato.setNome(request.getParameter("nome"));
 		contato.setFone(request.getParameter("fone"));
 		contato.setEmail(request.getParameter("email"));
 		
+		agendaDAO.inserirContato(contato);
 		
+		response.sendRedirect("main");
 	}
 
 }
