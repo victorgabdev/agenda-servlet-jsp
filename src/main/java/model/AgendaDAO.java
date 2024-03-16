@@ -3,6 +3,8 @@ package model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class AgendaDAO {
 
@@ -27,7 +29,7 @@ public class AgendaDAO {
 	}
 
 	// CRUD CREATE
-	public void inserirContato(AgendaBean contato) {
+	public void criarContato(AgendaBean contato) {
 		String scriptInsert = "INSERT INTO CONTATOS(NOME, FONE, EMAIL) VALUE (?, ?, ?);";
 
 		try {
@@ -47,6 +49,38 @@ public class AgendaDAO {
 			con.close();
 		} catch (Exception e) {
 			System.out.println(e);
+		}
+	}
+
+	// CRUD READ
+	public ArrayList<AgendaBean> listarContatos() {
+		String scriptSelect = "SELECT * FROM CONTATOS ORDER BY NOME";
+		ArrayList<AgendaBean> contatos = new ArrayList<>();
+
+		try {
+			// abrir conexão
+			Connection con = conectar();
+
+			// Preparar a query
+			PreparedStatement ps = con.prepareStatement(scriptSelect);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				String idcon = rs.getString(1);
+				String nome = rs.getString(2);
+				String fone = rs.getString(3);
+				String email = rs.getString(4);
+
+				contatos.add(new AgendaBean(idcon, nome, fone, email));
+			}
+
+			// encerrar conexão
+			con.close();
+
+			return contatos;
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
 		}
 	}
 }
