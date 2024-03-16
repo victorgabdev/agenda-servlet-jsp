@@ -83,4 +83,31 @@ public class AgendaDAO {
 			return null;
 		}
 	}
+	
+	// CRUD UPDATE
+	public void selecionarContatoPorId(AgendaBean contato) {
+		String scriptSelect = "Select * from contatos where idcon = ?";
+		
+		try {
+			// abrir conexao
+			Connection con = conectar();
+			
+			// Preparar Query
+			PreparedStatement ps = con.prepareStatement(scriptSelect);
+			ps.setString(1, contato.getIdcon());
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				contato.setIdcon(rs.getString(1));
+				contato.setNome(rs.getString(2));
+				contato.setFone(rs.getString(3));
+				contato.setEmail(rs.getString(4));
+			}
+			
+			// fechar conexão
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
 }
