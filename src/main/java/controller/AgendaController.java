@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.AgendaDAO;
 import model.AgendaBean;
 
-@WebServlet(urlPatterns = { "/Controller", "/main", "/insert", "/select" })
+@WebServlet(urlPatterns = { "/Controller", "/main", "/insert", "/select", "/update" })
 public class AgendaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -32,6 +32,8 @@ public class AgendaController extends HttpServlet {
 		} else if (servletPath.equals("/insert")) {
 			criarContato(request, response);
 		} else if (servletPath.equals("/select")) {
+			selecionarContato(request, response);
+		} else if (servletPath.equals("/update")) {
 			editarContato(request, response);
 		} else {
 			response.sendRedirect("index.html");
@@ -59,10 +61,30 @@ public class AgendaController extends HttpServlet {
 		response.sendRedirect("main");
 	}
 
-	protected void editarContato(HttpServletRequest request, HttpServletResponse response)
+	protected void selecionarContato(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String idcon = request.getParameter("idcon");
 		contato.setIdcon(idcon);
 		agendaDAO.selecionarContatoPorId(contato);
+
+		request.setAttribute("idcon", contato.getIdcon());
+		request.setAttribute("nome", contato.getNome());
+		request.setAttribute("fone", contato.getFone());
+		request.setAttribute("email", contato.getEmail());
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("editar.jsp");
+		dispatcher.forward(request, response);
+	}
+
+	protected void editarContato(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		contato.setIdcon(request.getParameter("idcon"));
+		contato.setNome(request.getParameter("nome"));
+		contato.setFone(request.getParameter("fone"));
+		contato.setEmail(request.getParameter("email"));
+		
+		agendaDAO.editarContato(contato);
+		
+		response.sendRedirect("main");
 	}
 }
