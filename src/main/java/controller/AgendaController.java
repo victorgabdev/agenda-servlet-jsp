@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.AgendaDAO;
 import model.AgendaBean;
 
-@WebServlet(urlPatterns = { "/Controller", "/main", "/insert", "/select", "/update" })
+@WebServlet(urlPatterns = { "/Controller", "/main", "/insert", "/select", "/update", "/delete" })
 public class AgendaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -35,6 +35,8 @@ public class AgendaController extends HttpServlet {
 			selecionarContato(request, response);
 		} else if (servletPath.equals("/update")) {
 			editarContato(request, response);
+		} else if (servletPath.equals("/delete")) {
+			removerContato(request, response);
 		} else {
 			response.sendRedirect("index.html");
 		}
@@ -84,6 +86,15 @@ public class AgendaController extends HttpServlet {
 		contato.setEmail(request.getParameter("email"));
 		
 		agendaDAO.editarContato(contato);
+		
+		response.sendRedirect("main");
+	}
+	
+	protected void removerContato(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String idcon = request.getParameter("idcon");
+		contato.setIdcon(idcon);
+		agendaDAO.removerContato(contato);
 		
 		response.sendRedirect("main");
 	}
